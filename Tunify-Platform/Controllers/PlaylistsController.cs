@@ -54,5 +54,12 @@ namespace Tunify_Platform.Controllers
         {
            await _playlists.DeletePlaylistAsync(id);
         }
+        // Lab 13 
+        [HttpPost("playlists/{playlistId}/songs/{songId}")]
+        public async Task<IActionResult> AddSongToPlaylist(int playlistId, int songId)
+        {
+           var playlist= await _playlists.AddSongToPlaylist(playlistId, songId);
+            return Ok(playlist);
+        }
     }
 }

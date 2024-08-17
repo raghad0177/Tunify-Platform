@@ -11,8 +11,8 @@ using Tunify_Platform.Data;
 namespace Tunify_Platform.Migrations
 {
     [DbContext(typeof(TunifyDbContext))]
-    [Migration("20240805162355_SeedInitialData")]
-    partial class SeedInitialData
+    [Migration("20240816141617_Add-OnDelete")]
+    partial class AddOnDelete
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,8 @@ namespace Tunify_Platform.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AlbumsId");
+
+                    b.HasIndex("ArtistsId");
 
                     b.ToTable("albums");
                 });
@@ -113,16 +115,9 @@ namespace Tunify_Platform.Migrations
 
                     b.HasKey("PlaylistsId");
 
-                    b.ToTable("playlists");
+                    b.HasIndex("UsersId");
 
-                    b.HasData(
-                        new
-                        {
-                            PlaylistsId = 1,
-                            CreatedDate = "2024",
-                            PlaylistsName = "first song",
-                            UsersId = 1
-                        });
+                    b.ToTable("playlists");
                 });
 
             modelBuilder.Entity("Tunify_Platform.Models.Songs", b =>
@@ -151,24 +146,20 @@ namespace Tunify_Platform.Migrations
 
                     b.HasKey("SongsId");
 
-                    b.ToTable("songs");
+                    b.HasIndex("AlbumsId");
 
-                    b.HasData(
-                        new
-                        {
-                            SongsId = 1,
-                            AlbumsId = 1,
-                            ArtistsId = 1,
-                            Duration = 30,
-                            Genre = 1,
-                            Title = "first song"
-                        });
+                    b.HasIndex("ArtistsId");
+
+                    b.ToTable("songs");
                 });
 
             modelBuilder.Entity("Tunify_Platform.Models.Subscriptions", b =>
                 {
-                    b.Property<string>("SubscriptionsId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SubscriptionsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionsId"));
 
                     b.Property<int>("SubscriptionsPrice")
                         .HasColumnType("int");
@@ -198,7 +189,7 @@ namespace Tunify_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubscriptionId")
+                    b.Property<int>("SubscriptionsId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -207,42 +198,112 @@ namespace Tunify_Platform.Migrations
 
                     b.HasKey("UsersId");
 
-                    b.ToTable("users");
+                    b.HasIndex("SubscriptionsId");
 
-                    b.HasData(
-                        new
-                        {
-                            UsersId = 1,
-                            Email = "raghad@gmail.com",
-                            JoinDate = "2024",
-                            SubscriptionId = 1,
-                            UserName = "Raghad"
-                        });
+                    b.ToTable("users");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Albums", b =>
+                {
+                    b.HasOne("Tunify_Platform.Models.Artists", "Artists")
+                        .WithMany("Albums")
+                        .HasForeignKey("ArtistsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Artists");
                 });
 
             modelBuilder.Entity("Tunify_Platform.Models.PlaylistSongs", b =>
                 {
-                    b.HasOne("Tunify_Platform.Models.Playlists", null)
-                        .WithMany("playlists")
+                    b.HasOne("Tunify_Platform.Models.Playlists", "Playlists")
+                        .WithMany("PlaylistSongs")
                         .HasForeignKey("PlaylistsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Tunify_Platform.Models.Songs", null)
-                        .WithMany("songs")
+                    b.HasOne("Tunify_Platform.Models.Songs", "Songs")
+                        .WithMany("PlaylistSongs")
                         .HasForeignKey("SongsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Playlists");
+
+                    b.Navigation("Songs");
                 });
 
             modelBuilder.Entity("Tunify_Platform.Models.Playlists", b =>
                 {
-                    b.Navigation("playlists");
+                    b.HasOne("Tunify_Platform.Models.Users", "Users")
+                        .WithMany("Playlists")
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Tunify_Platform.Models.Songs", b =>
                 {
-                    b.Navigation("songs");
+                    b.HasOne("Tunify_Platform.Models.Albums", "Albums")
+                        .WithMany("Songs")
+                        .HasForeignKey("AlbumsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Tunify_Platform.Models.Artists", "Artists")
+                        .WithMany("Songs")
+                        .HasForeignKey("ArtistsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Albums");
+
+                    b.Navigation("Artists");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Users", b =>
+                {
+                    b.HasOne("Tunify_Platform.Models.Subscriptions", "Subscriptions")
+                        .WithMany("Users")
+                        .HasForeignKey("SubscriptionsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Subscriptions");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Albums", b =>
+                {
+                    b.Navigation("Songs");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Artists", b =>
+                {
+                    b.Navigation("Albums");
+
+                    b.Navigation("Songs");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Playlists", b =>
+                {
+                    b.Navigation("PlaylistSongs");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Songs", b =>
+                {
+                    b.Navigation("PlaylistSongs");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Subscriptions", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Tunify_Platform.Models.Users", b =>
+                {
+                    b.Navigation("Playlists");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,8 +2,9 @@
 {
     public class Subscriptions
     {
-        public string SubscriptionsId { get; set; }
+        public int SubscriptionsId { get; set; }
         public string SubscriptionsType { get; set; }   
         public int SubscriptionsPrice {  get; set; }
+        public ICollection<Users> Users { get; set; }
     }
 }
