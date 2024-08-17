@@ -54,5 +54,6 @@ namespace Tunify_Platform.Controllers
         {
              await _artists.DeleteArtist(id);
         }
+       
     }
 }
