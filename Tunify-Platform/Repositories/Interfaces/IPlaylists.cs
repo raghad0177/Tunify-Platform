@@ -9,5 +9,6 @@ namespace Tunify_Platform.Repositories.Interfaces
         Task<Playlists> CreatePlaylistAsync(Playlists playlist);
         Task<Playlists> UpdatePlaylist(int playlistId, Playlists playlist);
         Task DeletePlaylistAsync(int playlistId);
+        Task<Playlists> AddSongToPlaylist(int playlistId, int songId);
     }
 }

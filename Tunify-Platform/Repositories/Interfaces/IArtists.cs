@@ -1,4 +1,5 @@
-﻿using Tunify_Platform.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Tunify_Platform.Models;
 
 namespace Tunify_Platform.Repositories.Interfaces
 {
