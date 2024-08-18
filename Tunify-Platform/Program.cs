@@ -12,7 +12,7 @@ namespace Tunify_Platform
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
-            // Get the connection string settings 
+            // Get the connection string settings  
             string ConnectionStringVar = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<TunifyDbContext>(optionsX => optionsX.UseSqlServer(ConnectionStringVar));
             builder.Services.AddScoped<IArtists, ArtistsServices>();
