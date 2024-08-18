@@ -18,7 +18,7 @@ namespace Tunify_Platform_Test
             var playlistId = 1;
             var songs = new List<Songs>
              {
-                new Songs { SongsId = 3, Title = "Song 1", ArtistsId = 1, AlbumsId = 1, Duration =3, Genre = 1 },
+                new Songs { SongsId = 3, Title = "Song 1", ArtistsId = 1, AlbumsId = 1, Duration =3, Genre = 1 }, 
                 new Songs { SongsId = 4, Title = "Song 2", ArtistsId = 2, AlbumsId = 2, Duration = 4, Genre = 2 }
              };
             var mockRepository = new Mock<ISongs>();
