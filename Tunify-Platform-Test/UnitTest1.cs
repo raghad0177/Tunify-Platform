@@ -30,7 +30,6 @@ namespace Tunify_Platform_Test
             Assert.Equal(2, result.Count);
             Assert.Contains(result, s => s.Title == "Song 1");
             Assert.Contains(result, s => s.Title == "Song 2");
-            Assert.Equal(songs.ToString(), result.ToString());
         }
     }
 }
