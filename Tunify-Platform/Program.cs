@@ -17,7 +17,7 @@ namespace Tunify_Platform
             builder.Services.AddDbContext<TunifyDbContext>(optionsX => optionsX.UseSqlServer(ConnectionStringVar));
             builder.Services.AddScoped<IArtists, ArtistsServices>();
             builder.Services.AddScoped<IPlaylists, PlaylistsServices>();
-            builder.Services.AddScoped<ISongs, SongsServices>();
+            builder.Services.AddScoped<ISongs, SongsServices>(); 
             builder.Services.AddScoped<IUsers, UsersServices>();
             var app = builder.Build();
             app.MapControllers();
