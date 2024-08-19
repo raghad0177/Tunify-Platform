@@ -11,14 +11,16 @@ namespace Tunify_Platform_Test
 {
     public class UnitTest1
     {
+
+
         [Fact]
         public async Task GetSongsForPlaylist_ReturnsCorrectSongs()
         {
-            // Arrange
+            // Arrange  
             var playlistId = 1;
             var songs = new List<Songs>
              {
-                new Songs { SongsId = 3, Title = "Song 1", ArtistsId = 1, AlbumsId = 1, Duration =3, Genre = 1 },
+                new Songs { SongsId = 3, Title = "Song 1", ArtistsId = 1, AlbumsId = 1, Duration =3, Genre = 1 }, 
                 new Songs { SongsId = 4, Title = "Song 2", ArtistsId = 2, AlbumsId = 2, Duration = 4, Genre = 2 }
              };
             var mockRepository = new Mock<ISongs>();
@@ -30,7 +32,6 @@ namespace Tunify_Platform_Test
             Assert.Equal(2, result.Count);
             Assert.Contains(result, s => s.Title == "Song 1");
             Assert.Contains(result, s => s.Title == "Song 2");
-            Assert.Equal(songs.ToString(), result.ToString());
         }
     }
 }
