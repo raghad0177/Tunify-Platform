@@ -24,7 +24,7 @@ namespace Tunify_Platform
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
                     Title = "Tunify API",
-                    Version = "v1",
+                    Version = "v1", 
                     Description = "API for managing playlists, songs, and artists in the Tunify Platform"
                 });
             });
