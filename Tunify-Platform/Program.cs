@@ -1,3 +1,6 @@
+using Humanizer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using Tunify_Platform.Data;
@@ -24,11 +27,15 @@ namespace Tunify_Platform
             // Get the connection string settings  
             string ConnectionStringVar = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<TunifyDbContext>(optionsX => optionsX.UseSqlServer(ConnectionStringVar));
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+           .AddEntityFrameworkStores<TunifyDbContext>();          
             builder.Services.AddScoped<IArtists, ArtistsServices>();
             builder.Services.AddScoped<IPlaylists, PlaylistsServices>();
             builder.Services.AddScoped<ISongs, SongsServices>();
             builder.Services.AddScoped<IUsers, UsersServices>();
+            builder.Services.AddScoped<IAccounts, IdentityAccountService>();
             var app = builder.Build();
+            app.UseAuthentication();
             app.UseSwagger(
              options =>
              {

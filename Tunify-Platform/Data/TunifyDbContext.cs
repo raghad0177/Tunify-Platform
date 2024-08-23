@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
+using System.Security.Principal;
 using Tunify_Platform.Models;
 using Tunify_Platform.Repositories.Interfaces;
 
 namespace Tunify_Platform.Data
 {
-    public class TunifyDbContext: DbContext
-    {
-       public TunifyDbContext(DbContextOptions <TunifyDbContext> options) : base(options)
+    public class TunifyDbContext: IdentityDbContext<IdentityUser> { 
+       public TunifyDbContext(DbContextOptions  options) : base(options)
        { 
        }
         public DbSet<Albums> albums { get; set; }   
