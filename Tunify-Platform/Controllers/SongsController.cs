@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace Tunify_Platform.Controllers
             _songs = context;
         }
         // GET: api/Songs
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Songs>>> Getsongs()
         {
@@ -48,7 +50,7 @@ namespace Tunify_Platform.Controllers
             var created = await _songs.CreateSong(songs);
             return Ok(created);
         }
-        // DELETE: api/Songs/5
+        // DELETE: api/Songs/5        
         [HttpDelete("{id}")]
         public async Task DeleteSongs(int id)
         {

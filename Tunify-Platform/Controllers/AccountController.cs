@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tunify_Platform.Models;
 using Tunify_Platform.Models.DTO;
@@ -48,6 +49,13 @@ namespace Tunify_Platform.Controllers
         {
             var account = await _IAccounts.LogOut(user);
             return account;
+        }
+        // Roles For Get Token
+        [Authorize(Roles = "Admin,User")] // only logged in users can have access to the profile
+        [HttpGet("GetToken")]
+        public async Task<ActionResult<RegisterDto>> GetToken()
+        {
+            return await _IAccounts.GetToken(User);
         }
     }
 }

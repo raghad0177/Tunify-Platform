@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tunify_Platform.Data;
 
@@ -11,9 +12,11 @@ using Tunify_Platform.Data;
 namespace Tunify_Platform.Migrations
 {
     [DbContext(typeof(TunifyDbContext))]
-    partial class TunifyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240827234107_AddRole")]
+    partial class AddRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,30 +95,30 @@ namespace Tunify_Platform.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 167022,
+                            Id = 1275239598,
                             ClaimType = "permission",
                             ClaimValue = "create",
                             RoleId = "admin"
                         },
                         new
                         {
-                            Id = 406845396,
+                            Id = 517510497,
                             ClaimType = "permission",
                             ClaimValue = "update",
                             RoleId = "admin"
                         },
                         new
                         {
-                            Id = 1885946188,
+                            Id = -1602509656,
                             ClaimType = "permission",
                             ClaimValue = "delete",
                             RoleId = "admin"
                         },
                         new
                         {
-                            Id = 1163759458,
+                            Id = -82161612,
                             ClaimType = "permission",
-                            ClaimValue = "delete",
+                            ClaimValue = "read",
                             RoleId = "user"
                         });
                 });

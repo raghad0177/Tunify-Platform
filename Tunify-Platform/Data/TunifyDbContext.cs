@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Drawing.Printing;
 using System.Security.Principal;
 using Tunify_Platform.Models;
@@ -9,7 +10,8 @@ using Tunify_Platform.Repositories.Interfaces;
 namespace Tunify_Platform.Data
 {
     public class TunifyDbContext: IdentityDbContext<IdentityUser> { 
-       public TunifyDbContext(DbContextOptions  options) : base(options)
+
+       public TunifyDbContext(DbContextOptions<TunifyDbContext>  options) : base(options)
        { 
        }
         public DbSet<Albums> albums { get; set; }   
@@ -84,6 +86,69 @@ namespace Tunify_Platform.Data
             modelBuilder.Entity<Subscriptions>().HasData(
                 new Subscriptions { SubscriptionsId = 1, SubscriptionsPrice = 1, SubscriptionsType="Basic" }
             );
+            seedRoles(modelBuilder, "Admin", "create", "update", "delete");
+            seedRoles(modelBuilder, "User", "delete");
+            // Seed the default admin user
+            // seedAdminUser(modelBuilder);
         }
+        //seedRoles(modelBuilder , Admin , [create, update, delete])
+        private void seedRoles(ModelBuilder modelBuilder, string roleName, params string[] permission)
+        {
+            var role = new IdentityRole
+            {
+                Id = roleName.ToLower(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.Empty.ToString()
+            };
+            // add claims for the users
+            var claims = permission.Select(permission => new IdentityRoleClaim<string>
+            {
+                Id = Guid.NewGuid().GetHashCode(),
+                // Unique identifier
+                RoleId = role.Id,
+                ClaimType = "permission",
+                ClaimValue = permission
+            });
+            // Seed the role and its claims
+            modelBuilder.Entity<IdentityRole>().HasData(role);
+            modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(claims);
+        }
+        //private void seedAdminUser(ModelBuilder modelBuilder)
+        //{
+        //    var adminUser = new IdentityUser
+        //    {
+        //        Id = "admin_user_id",
+        //        UserName = "admin",
+        //        NormalizedUserName = "ADMIN",
+        //        Email = "admin@example.com",
+        //        NormalizedEmail = "ADMIN@EXAMPLE.COM",
+        //        EmailConfirmed = true,
+        //        SecurityStamp = Guid.NewGuid().ToString("D"),
+        //        ConcurrencyStamp = Guid.NewGuid().ToString("D"),
+        //    };
+        //    // Set password for the admin user
+        //    var passwordHasher = new PasswordHasher<IdentityUser>();
+        //    adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "AdminPassword123!");
+
+        //    modelBuilder.Entity<IdentityUser>().HasData(adminUser);
+
+        //    // Assign the admin role to the admin user
+        //     modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+        //     {
+        //         RoleId = "admin",
+        //         UserId = adminUser.Id
+        //     });
+
+        //    // Add any necessary claims to the admin user
+        //    modelBuilder.Entity<IdentityUserClaim<string>>().HasData(new IdentityUserClaim<string>
+        //    {
+        //        Id = Guid.NewGuid().GetHashCode(),
+        //        UserId = adminUser.Id,
+        //        ClaimType = "permission",
+        //        ClaimValue = "full_access"
+        //    });
+        //}
+
     }
 }

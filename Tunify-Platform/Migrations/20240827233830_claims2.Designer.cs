@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tunify_Platform.Data;
 
@@ -11,9 +12,11 @@ using Tunify_Platform.Data;
 namespace Tunify_Platform.Migrations
 {
     [DbContext(typeof(TunifyDbContext))]
-    partial class TunifyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240827233830_claims2")]
+    partial class claims2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,22 +50,6 @@ namespace Tunify_Platform.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "admin",
-                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "user",
-                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -88,36 +75,6 @@ namespace Tunify_Platform.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 167022,
-                            ClaimType = "permission",
-                            ClaimValue = "create",
-                            RoleId = "admin"
-                        },
-                        new
-                        {
-                            Id = 406845396,
-                            ClaimType = "permission",
-                            ClaimValue = "update",
-                            RoleId = "admin"
-                        },
-                        new
-                        {
-                            Id = 1885946188,
-                            ClaimType = "permission",
-                            ClaimValue = "delete",
-                            RoleId = "admin"
-                        },
-                        new
-                        {
-                            Id = 1163759458,
-                            ClaimType = "permission",
-                            ClaimValue = "delete",
-                            RoleId = "user"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
