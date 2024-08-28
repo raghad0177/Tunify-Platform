@@ -51,7 +51,7 @@ namespace Tunify_Platform.Controllers
             return account;
         }
         // Roles For Get Token
-        [Authorize(Roles = "Admin,User")] // only logged in users can have access to the profile
+       // only logged in users can have access to the profile
         [HttpGet("GetToken")]
         public async Task<ActionResult<RegisterDto>> GetToken()
         {

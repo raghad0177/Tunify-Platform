@@ -29,13 +29,11 @@ namespace Tunify_Platform.Data
                 .WithMany(b => b.Albums)
                 .HasForeignKey(a => a.ArtistsId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Playlists>()
                 .HasOne(a => a.Users)
                 .WithMany(b => b.Playlists)
                 .HasForeignKey(a => a.UsersId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<PlaylistSongs>()
                 .HasOne(a => a.Songs)
                 .WithMany(b => b.PlaylistSongs)
@@ -46,27 +44,21 @@ namespace Tunify_Platform.Data
                 .WithMany(b => b.PlaylistSongs)
                 .HasForeignKey(a => a.PlaylistsId)
                .OnDelete(DeleteBehavior.Restrict);
-
-
             modelBuilder.Entity<Songs>()
                 .HasOne(a => a.Artists)
                 .WithMany(b => b.Songs)
                 .HasForeignKey(a => a.ArtistsId)
-                .OnDelete(DeleteBehavior.Restrict);
-                
+                .OnDelete(DeleteBehavior.Restrict);                
             modelBuilder.Entity<Songs>()
               .HasOne(a => a.Albums)
               .WithMany(b => b.Songs)
               .HasForeignKey(a => a.AlbumsId)
              .OnDelete(DeleteBehavior.Restrict);
-
-
             modelBuilder.Entity<Users>()
                 .HasOne(a => a.Subscriptions)
                 .WithMany(b => b.Users)
                 .HasForeignKey(a => a.SubscriptionsId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Albums>().HasData(
                   new Albums { AlbumsId = 1, AlbumName = "First Album", ArtistsId = 1 , ReleaseDate="2000"}
             );
@@ -86,8 +78,8 @@ namespace Tunify_Platform.Data
             modelBuilder.Entity<Subscriptions>().HasData(
                 new Subscriptions { SubscriptionsId = 1, SubscriptionsPrice = 1, SubscriptionsType="Basic" }
             );
-            seedRoles(modelBuilder, "Admin", "create", "update", "delete");
-            seedRoles(modelBuilder, "User", "delete");
+            seedRoles(modelBuilder, "Admin", "update","read","delete","create");
+            seedRoles(modelBuilder, "User", "update");
             // Seed the default admin user
             // seedAdminUser(modelBuilder);
         }
@@ -149,6 +141,5 @@ namespace Tunify_Platform.Data
         //        ClaimValue = "full_access"
         //    });
         //}
-
     }
 }

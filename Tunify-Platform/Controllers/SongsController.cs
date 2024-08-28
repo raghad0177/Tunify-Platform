@@ -36,6 +36,8 @@ namespace Tunify_Platform.Controllers
         }
         // PUT: api/Songs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // user has the claim update , admin has the claim update 
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSongs(int id, Songs songs)
         {

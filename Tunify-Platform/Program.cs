@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.Options;
 using Microsoft.OpenApi.Models;
 using Microsoft.Identity.Client;
 using System.Collections.Generic;
-
 namespace Tunify_Platform
 {
     public class Program
@@ -28,9 +27,7 @@ namespace Tunify_Platform
             // Add Identity Service
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<TunifyDbContext>();
-
             builder.Services.AddHttpContextAccessor();
-
             //Add The Services & Interfaces Access
             builder.Services.AddScoped<IUsers, UsersServices>();
             builder.Services.AddScoped<IArtists, ArtistsServices>();
@@ -38,7 +35,6 @@ namespace Tunify_Platform
             builder.Services.AddScoped<ISongs, SongsServices>();
             builder.Services.AddScoped<IAccounts, IdentityAccountService>();
             builder.Services.AddScoped<JwtTokenService>();
-
             // add auth service to the app using jwt
             builder.Services.AddAuthentication(
                 options =>
@@ -52,6 +48,17 @@ namespace Tunify_Platform
                 {
                     options.TokenValidationParameters = JwtTokenService.ValidateToken(builder.Configuration);
                 });
+            builder.Services.AddAuthorization(options =>
+            {
+                // Role Based Policy
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                // Claim Based Policy
+                options.AddPolicy("RequireUpdatePermission", policy =>
+                policy.RequireClaim("permission", "update"));
+                // Claim Based Policy  
+                options.AddPolicy("RequireFullAccess", policy =>
+                policy.RequireClaim("permission", "full_access"));
+            });
 
             // Swagger Configration
             builder.Services.AddSwaggerGen(options =>
