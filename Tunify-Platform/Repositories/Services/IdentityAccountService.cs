@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Identity.Client;
+using System.Security.Claims;
 using Tunify_Platform.Models.DTO;
 using Tunify_Platform.Repositories.Interfaces;
 
@@ -10,10 +11,13 @@ namespace Tunify_Platform.Repositories.Services
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        public IdentityAccountService(UserManager<IdentityUser> Manager, SignInManager<IdentityUser> signInManager)
+        // inject jwt service
+        private JwtTokenService jwtTokenService;
+        public IdentityAccountService(UserManager<IdentityUser> Manager, SignInManager<IdentityUser> signInManager, JwtTokenService jwtTokenService)
         {
             _userManager = Manager;
             _signInManager = signInManager;
+            this.jwtTokenService = jwtTokenService;
         }
         // Register User
         public async Task<RegisterDto> Register(RegisterDto registerdUserDto, ModelStateDictionary modelState)
@@ -24,6 +28,7 @@ namespace Tunify_Platform.Repositories.Services
                 Email = registerdUserDto.Email,
             };
             var result = await _userManager.CreateAsync(user, registerdUserDto.Password);
+            await _userManager.AddToRolesAsync(user, registerdUserDto.Roles);
             foreach (var error in result.Errors)
             {
                 var errorCode = error.Code.Contains("Password") ? nameof(registerdUserDto) :
@@ -42,7 +47,8 @@ namespace Tunify_Platform.Repositories.Services
             {
                 return new RegisterDto()
                 {                
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    Token = await jwtTokenService.GenerateToken(user, System.TimeSpan.FromMinutes(1))
                 };
             }
             return null;
@@ -58,6 +64,19 @@ namespace Tunify_Platform.Repositories.Services
                 UserName = user1.UserName
             };
             return result;
+        }       
+        public async Task<RegisterDto> GetToken(ClaimsPrincipal claimsPrincipal)
+        {
+            var user = await _userManager.GetUserAsync(claimsPrincipal);
+            if (user == null)
+            {
+                throw new InvalidOperationException("Token Is Not Exist!");
+            }
+            return new RegisterDto()
+            {
+                UserName=user.UserName,
+                Token = await jwtTokenService.GenerateToken(user, System.TimeSpan.FromMinutes(1)) // just for development purposes
+            };
         }
     }
 }

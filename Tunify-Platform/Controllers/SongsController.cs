@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace Tunify_Platform.Controllers
             _songs = context;
         }
         // GET: api/Songs
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Songs>>> Getsongs()
         {
@@ -34,6 +36,8 @@ namespace Tunify_Platform.Controllers
         }
         // PUT: api/Songs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // user has the claim update , admin has the claim update 
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSongs(int id, Songs songs)
         {
@@ -48,7 +52,7 @@ namespace Tunify_Platform.Controllers
             var created = await _songs.CreateSong(songs);
             return Ok(created);
         }
-        // DELETE: api/Songs/5
+        // DELETE: api/Songs/5        
         [HttpDelete("{id}")]
         public async Task DeleteSongs(int id)
         {
